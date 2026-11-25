@@ -1,68 +1,25 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Music Journey</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f8f6f2;
-      color: #333;
-      margin: 0;
-      padding: 24px;
-    }
-    .app {
-      max-width: 520px;
-      margin: auto;
-    }
-    h1 { color: #466657; }
-    .card {
-      background: white;
-      padding: 20px;
-      margin: 14px 0;
-      border-radius: 14px;
-      box-shadow: 0 2px 8px #00000010;
-    }
-    button {
-      background: #466657;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 18px;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Music Journey</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#29342f;background:#f8f6f2}body{margin:0;padding:20px}.app{max-width:600px;margin:auto}h1{color:#466657;font-size:2rem}h2{font-size:1.25rem}.card{background:white;border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 2px 8px #0000000d}button{background:#466657;color:white;border:0;border-radius:9px;padding:12px 16px;font-size:1rem;cursor:pointer}button.secondary{background:#e9eee9;color:#314b3f}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #9bc9a8}label{display:block;margin:14px 0 6px;font-weight:600}input,textarea{box-sizing:border-box;width:100%;font:inherit;padding:12px;border:1px solid #cbd2cc;border-radius:9px}textarea{min-height:100px;resize:vertical}.hidden{display:none}.actions{display:flex;gap:10px;flex-wrap:wrap}.muted{color:#65736a}.record{border-top:1px solid #e4e9e5;padding:14px 0;white-space:pre-wrap;overflow-wrap:anywhere}.record:first-child{border:0}small{color:#68756c}#status{color:#2f6a49}nav{display:flex;gap:8px;flex-wrap:wrap}
+</style>
 </head>
-<body>
-  <main class="app">
-    <h1>My Music Journey</h1>
-    <p>音楽を学んだ時間を、未来の財産に。</p>
-
-    <div class="card">
-      <h2>レッスンノート</h2>
-      <p>今日の学びと次回に向けての記録</p>
-      <button>ノートを開く</button>
-    </div>
-
-    <div class="card">
-      <h2>学習履歴</h2>
-      <p>これまで取り組んだ曲やレッスン</p>
-      <button>履歴を見る</button>
-    </div>
-
-    <div class="card">
-      <h2>メッセージ</h2>
-      <p>先生と生徒の自由なやり取り</p>
-      <button>メッセージを開く</button>
-    </div>
-
-    <div class="card">
-      <h2>レッスン予定</h2>
-      <p>日時や場所を確認</p>
-      <button>予定を見る</button>
-    </div>
-  </main>
-</body>
-</html>
+<body><main class="app">
+<h1>My Music Journey</h1><p>音楽を学んだ時間を、未来の財産に。</p>
+<nav><button type="button" class="secondary" onclick="show('home')">ホーム</button><button type="button" class="secondary" onclick="show('note')">レッスンノート</button><button type="button" class="secondary" onclick="show('history')">学習履歴</button></nav>
+<section id="home"><div class="card"><h2>レッスンノート</h2><p>今日の学びと次回に向けての記録</p><button onclick="show('note')">ノートを開く</button></div><div class="card"><h2>学習履歴</h2><p>これまで取り組んだ曲やレッスン</p><button onclick="show('history')">履歴を見る</button></div><div class="card"><h2>メッセージ</h2><p class="muted">先生と生徒のやり取り（今後追加）</p></div><div class="card"><h2>レッスン予定</h2><p class="muted">日時や場所の管理（今後追加）</p></div></section>
+<section id="note" class="hidden"><div class="card"><h2>今日のレッスンノート</h2><form id="lessonForm"><label for="date">レッスン日</label><input id="date" type="date" required><label for="piece">取り組んだ曲・教材</label><input id="piece" required placeholder="例：Caro mio ben"><label for="lesson">今日のレッスン内容</label><textarea id="lesson" required placeholder="今日取り組んだこと"></textarea><label for="point">今日のポイント（任意）</label><textarea id="point" placeholder="覚えておきたいこと"></textarea><label for="next">次回に向けて（任意）</label><textarea id="next" placeholder="例：次回は後半の表現を考えましょう"></textarea><button type="submit">記録を保存</button></form><p id="status" role="status"></p></div></section>
+<section id="history" class="hidden"><div class="card"><h2>これまでの学習履歴</h2><label for="search">曲名・年月・内容で検索</label><input id="search" placeholder="例：2026-11 / Caro mio ben" oninput="renderHistory()"><div id="records"></div></div></section>
+<p><small>試用版：この端末のブラウザ内だけに記録を保存します。別端末との共有やバックアップには未対応です。実際の生徒の個人情報はまだ入力しないでください。</small></p>
+</main><script>
+const key='mmj-demo-lessons-v1';
+function load(){try{const a=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(a)?a:[]}catch{return []}}
+function show(page){for(const id of ['home','note','history'])document.getElementById(id).classList.toggle('hidden',id!==page);if(page==='history')renderHistory();window.scrollTo(0,0)}
+function el(tag,text){const e=document.createElement(tag);e.textContent=text;return e}
+function renderHistory(){const target=document.getElementById('records');target.replaceChildren();const q=document.getElementById('search').value.toLowerCase().trim();const matches=load().filter(r=>[r.date,r.piece,r.lesson,r.point,r.next].join(' ').toLowerCase().includes(q)).sort((a,b)=>b.date.localeCompare(a.date));if(!matches.length){target.append(el('p','記録がありません。'));return}for(const r of matches){const div=document.createElement('div');div.className='record';div.append(el('small',r.date),el('h3',r.piece),el('p','今日のレッスン：'+r.lesson));if(r.point)div.append(el('p','今日のポイント：'+r.point));if(r.next)div.append(el('p','次回に向けて：'+r.next));target.append(div)}}
+document.getElementById('date').value=new Date().toLocaleDateString('sv-SE');
+document.getElementById('lessonForm').addEventListener('submit',e=>{e.preventDefault();const ids=['date','piece','lesson','point','next'];const r=Object.fromEntries(ids.map(id=>[id,document.getElementById(id).value.trim()]));const all=load();all.push(r);try{localStorage.setItem(key,JSON.stringify(all));document.getElementById('status').textContent='保存しました。学習履歴から確認できます。';e.target.reset();document.getElementById('date').value=new Date().toLocaleDateString('sv-SE')}catch{document.getElementById('status').textContent='保存できませんでした。ブラウザの保存設定をご確認ください。'}});
+</script></body></html>
